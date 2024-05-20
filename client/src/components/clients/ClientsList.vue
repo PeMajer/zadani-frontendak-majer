@@ -76,7 +76,7 @@
         clientsCount: 0,
         page: 1,
         pageSize: 15,
-        sortField: 'invoices_count',
+        sortField: 'name',
         sortOrder: 'descending',
       };
     },

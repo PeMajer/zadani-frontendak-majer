@@ -1,21 +1,41 @@
 import gql from 'graphql-tag';
 
+export const CLIENT_QUERY = gql`
+  query client($id: ID!) {
+    Client(id: $id) {
+      city
+      company_number
+      country_code
+      email
+      id
+      invoices_count
+      name
+      phone
+      postcode
+      street
+      tax_number
+      vat_number
+      web
+    }
+  }
+`;
+
 export const CLIENTS_LIST_QUERY = gql`
   query clientsList($sortField: String, $filter: ClientFilter, $perPage: Int, $page: Int) {
     allClients(sortField: $sortField, filter: $filter, perPage: $perPage, page: $page) {
-      id
-      name
-      company_number
-      street
       city
-      postcode
+      company_number
       country_code
+      email
+      id
+      invoices_count
+      name
+      phone
+      postcode
+      street
       tax_number
       vat_number
-      email
-      phone
       web
-      invoices_count
     }
   }
 `;

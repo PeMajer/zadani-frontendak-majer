@@ -1,7 +1,8 @@
 import gql from 'graphql-tag';
 
-export const CREATE_CLIENT = gql`
+const generateClientMutation = (action, includeId = false) => gql`
   mutation(
+    ${includeId ? '$id: ID!' : ''}
     $name: String!
     $company_number: String!
     $street: String!
@@ -14,7 +15,8 @@ export const CREATE_CLIENT = gql`
     $phone: String!
     $web: String!
     $invoices_count: Int!
-  ) { createClient(
+  ) { ${action}Client(
+        ${includeId ? 'id: $id' : ''}
         name: $name
         company_number: $company_number
         street: $street
@@ -31,6 +33,9 @@ export const CREATE_CLIENT = gql`
         }
     }
 `;
+
+export const CREATE_CLIENT = generateClientMutation('create');
+export const UPDATE_CLIENT = generateClientMutation('update', true);
 
 export const DELETE_CLIENT = gql`
   mutation($id: ID!) {
