@@ -169,7 +169,7 @@
 
   .white-container {
     background-color: var(--bg-color-light);
-    padding: 1rem;
+    padding: 2rem;
     border-radius: 8px;
   }
 
