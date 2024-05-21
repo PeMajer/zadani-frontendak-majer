@@ -10,11 +10,11 @@
     >
       <el-option
         v-for="country in countries"
-        :key="country.alpha3Code"
-        :label="country.translations.ces.official"
-        :value="country.cca2"
+        :key="country.code"
+        :label="country.name"
+        :value="country.code"
       >
-        {{ country.translations.ces.official }}
+        {{ country.name }}
       </el-option>
     </el-select>
   </el-form-item>
@@ -32,7 +32,7 @@ export default {
   data() {
     return {
       countries: [],
-      selectedOption: 'Česká republika',
+      selectedOption: this.selected || 'CZ',
       error: '',
     }
   },
@@ -42,22 +42,25 @@ export default {
     }
   },
   created() {
-    this.fetchCountries();
+    // this.fetchCountries();
+    const countriesI18n = require("i18n-iso-countries");
+    countriesI18n.registerLocale(require("i18n-iso-countries/langs/cs.json"));
+    this.countries = Object.values(countriesI18n.getAlpha3Codes()).map((item) => { return({ code: item, name:  countriesI18n.getName(item, "cs") })});
   },
   methods: {
-    async fetchCountries() {
-      try {
-        const response = await fetch('https://restcountries.com/v3.1/all?fields=translations,cca2');
-        if (!response.ok) {
-          this.error = `Network response was not ok: ${response.statusText}`;
-        }
-        const data = await response.json();
-        this.countries = data;
-        this.selectedOption = this.selected || 'CZ';
-      } catch (error) {
-        this.error = error;
-      }
-    },
+    // async fetchCountries() {
+    //   try {
+    //     const response = await fetch('https://restcountries.com/v3.1/all?fields=translations,cca2');
+    //     if (!response.ok) {
+    //       this.error = `Network response was not ok: ${response.statusText}`;
+    //     }
+    //     const data = await response.json();
+    //     this.countries = data;
+    //     this.selectedOption = this.selected || 'CZ';
+    //   } catch (error) {
+    //     this.error = error;
+    //   }
+    // },
     onSelectedOptionChange(value) {
       this.$emit('update-selected-country', value);
     }
