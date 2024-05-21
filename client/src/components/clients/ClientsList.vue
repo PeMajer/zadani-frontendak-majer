@@ -5,7 +5,7 @@
         <h1>Seznam kontaktů</h1>
       </header>
       <main>
-        <div class="white-container">
+        <div class="main-container">
           <div v-if="error" class="error">
             <div class="error-container">
               <img src="@/assets/ares-error.svg" />
@@ -167,7 +167,7 @@
     margin: 0 auto;
   }
 
-  .white-container {
+  .main-container {
     background-color: var(--bg-color-light);
     padding: 2rem;
     border-radius: 8px;

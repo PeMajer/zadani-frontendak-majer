@@ -5,7 +5,7 @@
         <h1>Nový kontakt</h1>
       </header>
       <main>
-        <div class="white-container">
+        <div class="main-container">
           <ClientForm />
         </div>
       </main>

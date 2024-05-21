@@ -31,30 +31,34 @@
               :label="company.name"
               :value="company"
             >
-              <b>{{ company.name }}</b>
-              <div>IČO: {{ company.company_number }}</div>
-              <div v-if="company.street && company.city && company.postcode">
-                {{ company.street }}, {{ company.city }}, {{ company.postcode }}
+              <div>
+                <b>{{ company.name }}</b>
+                <div>{{  clientData.name  }}</div>
+                <div>IČO: {{ company.company_number }}</div>
+                <div v-if="company.street && company.city && company.postcode">
+                  {{ company.street }}, {{ company.city }}, {{ company.postcode }}
+                </div>
               </div>
+              <i v-if="company.name == clientData.name" class="el-icon-check"/>
             </el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="IČO" prop="companyNumber">
           <el-input
             v-model="clientData.companyNumber"
+            @input="handleNumberInput"
             prefix-icon="el-icon-search"
             placeholder="Doplnit údaje podle IČO"
           ></el-input>
-          <div class="input-help-text">Pokud zadáte nejprve IČO subjektu, jeho název a adresa se automaticky
-            načtou.</div>
+          <div class="input-help-text">Pokud zadáte nejprve IČO subjektu, jeho název a adresa se automaticky načtou.</div>
         </el-form-item>
         <el-form-item label="DIČ" prop="vatNumber">
           <el-input v-model="clientData.vatNumber"></el-input>
         </el-form-item>
-        <el-form-item label="Telefon" prop="phone">
+        <el-form-item label="Telefon" prop="phone" type="tel">
           <el-input v-model="clientData.phone"></el-input>
         </el-form-item>
-        <el-form-item label="E-mail" prop="email">
+        <el-form-item label="E-mail" prop="email" type="email">
           <el-input v-model="clientData.email"></el-input>
         </el-form-item>
         <el-form-item label="Web" prop="web">
@@ -107,6 +111,9 @@
         rules: {
           name: [
             { required: true, message: 'Musíte zadat jméno', trigger: 'blur' },
+          ],
+          phone: [
+            { validator: this.validatePhone, trigger: 'blur' }
           ],
         },
         loading: '',
@@ -171,6 +178,18 @@
             return false;
           }
         });
+      },
+      handleNumberInput(value) {
+        const numericValue = value.replace(/[^0-9]/g, "");
+        this.clientData.companyNumber = numericValue;
+      },
+      validatePhone(rules, value, callback) {
+        const phoneRegex = /^[\d+\-() ]{9,}$/;
+        if (!value) { return callback() }
+        if (!phoneRegex.test(value)) {
+          return callback(new Error('Zadejte platné telefonní číslo'));
+        }
+        callback();
       },
       prefillData(data) {
         this.clientData = {
@@ -266,9 +285,22 @@
   }
 
   .select-like-input-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
     height: auto;
     line-height: 16px;
     padding-top: 8px;
     padding-bottom: 8px;
+
+    &.selected {
+      color: #606266;
+    }
+
+    .el-icon-check {
+      color: green;
+      font-size: 1.5rem;
+    }
   }
 </style>
