@@ -69,7 +69,7 @@
         <el-form-item label="PSČ" prop="postcode">
           <el-input v-model="clientData.postcode"></el-input>
         </el-form-item>
-        <ClientFormCountries />
+        <ClientFormCountries :selected="clientData.countryCode" @update-selected-country="updateSelectedCountry"/>
       </div>
       <el-row type="flex" justify="end">
         <el-button type="primary" plain @click="() => { this.$router.push({ path: '/' })}">Zahodit</el-button>
@@ -217,6 +217,9 @@
           .catch((error) => {
             console.error("Failed to save client:", error);
           });
+      },
+      updateSelectedCountry(newVal) {
+        this.clientData.countryCode = newVal;
       }
     }
   }
