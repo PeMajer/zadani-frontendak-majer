@@ -215,7 +215,7 @@
   }
 
   .negative-margin {
-    margin-left: -1rem;
-    margin-right: -1rem;
+    margin-left: -2rem;
+    margin-right: -2rem;
   }
 </style>
