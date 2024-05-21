@@ -1,9 +1,6 @@
 <template>
   <div>
-    <el-row type="flex" align="center" class="form-heading">
-      <img src="@/assets/ico-supply.svg" />
-      <h2>Základní údaje</h2>
-    </el-row>
+    <HeadingWithImage heading="Základní údaje" :image="require('@/assets/ico-supply.svg')" />
     <div v-if="error">{{ error }}</div>
     <el-form
       v-else
@@ -85,12 +82,20 @@
 
 <script>
   import ClientFormCountries from '@/components/clients/ClientFormCountries.vue';
+  import HeadingWithImage from '@/components/layout/HeadingWithImage';
   import { CREATE_CLIENT, UPDATE_CLIENT } from '../../muttations';
-  import { COMPANIES_LIST_QUERY, CLIENT_QUERY } from '../../queries';
+  import { COMPANIES_LIST_QUERY } from '../../queries';
 
   export default {
+    props: {
+      existedClientData: {
+        type: Object,
+        default: () => ({})
+      },
+    },
     components: {
       ClientFormCountries,
+      HeadingWithImage
     },
     data() {
       return {
@@ -118,12 +123,23 @@
         },
         loading: '',
         error: '',
-        isExistedClient: false,
+        isClientNew: true,
       };
     },
-    computed: {
-      clientIdProvided() {
-        return this.$route.params.id;
+    created() {
+      if (Object.keys(this.existedClientData).length > 0) {
+        this.isClientNew = false;
+        this.prefillData(this.existedClientData);
+      }
+    },
+    watch: {
+      'clientData.companyNumber': function(newVal) {
+        if (this.isClientNew) {
+          const company = this.allCompanyInfos.find(company => company.company_number === newVal);
+          if (company) {
+            this.prefillData(company);
+          }
+        }
       }
     },
     apollo: {
@@ -138,36 +154,6 @@
           this.error = error;
         },
       },
-      Client: {
-        query: CLIENT_QUERY,
-        skip() {
-          return !this.clientIdProvided;
-        },
-        variables() {
-          return {
-            id: this.clientIdProvided,
-          };
-        },
-        result({ data, loading, error }) {
-          this.loading = loading;
-          this.error = error;
-          if (data) {
-            const existedClient = data['Client'];
-            if (Object.keys(existedClient).length > 0) {
-              this.isExistedClient = true,
-              this.prefillData(existedClient);
-            }
-          }
-        },
-      },
-    },
-    watch: {
-      'clientData.companyNumber': function(newVal) {
-        const company = this.allCompanyInfos.find(company => company.company_number === newVal);
-        if (company && !this.isExistedClient) {
-          this.prefillData(company);
-        }
-      }
     },
     methods: {
       submitForm(formName) {
@@ -193,7 +179,7 @@
       },
       prefillData(data) {
         this.clientData = {
-          id: this.isExistedClient ? data.id : undefined,
+          id: this.isClientNew ? undefined : data.id ,
           city: data.city || data.address_city,
           companyNumber: data.company_number,
           countryCode: data.country_code,
@@ -209,13 +195,13 @@
         };
       },
       saveClient() {
-        const mutationType = this.isExistedClient ? UPDATE_CLIENT : CREATE_CLIENT;
+        const mutationType = this.isClientNew ? CREATE_CLIENT : UPDATE_CLIENT;
 
         this.$apollo
           .mutate({
             mutation: mutationType,
             variables: {
-              id: this.isExistedClient ? this.clientData.id : undefined,
+              id: this.isClientNew ? undefined : this.clientData.id,
               city: this.clientData.city || '',
               company_number: this.clientData.companyNumber || '',
               country_code: this.clientData.countryCode || '',

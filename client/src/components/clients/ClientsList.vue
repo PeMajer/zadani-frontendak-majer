@@ -27,9 +27,9 @@
                 style="width: 100%;"
                 header-row-class-name="table-header"
                 header-cell-class-name="table-header-cell"
-                empty-text="No contacts"
+                empty-text="Žádné kontakty"
               >
-                <el-table-column fixed sortable prop="name" label="Name">
+                <el-table-column fixed sortable prop="name" label="Kontakt">
                   <template slot-scope="scope">
                     <el-link type="primary" v-bind:href="'/edit/' + scope.row.id">{{ scope.row.name }}</el-link>
                   </template>
@@ -173,6 +173,10 @@
     border-radius: 8px;
   }
 
+  .main-container + .main-container {
+    margin-top: 3rem;
+  }
+
   .error {
     text-align: center;
     padding: 8rem 0;
@@ -186,9 +190,15 @@
   }
 
   .table-heading {
-    margin-bottom: 1rem;
     display: flex;
     justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .table-heading--align-right {
+    justify-content: flex-end;
   }
 
   .table-header {

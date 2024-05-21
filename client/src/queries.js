@@ -68,3 +68,27 @@ export const ALL_CLIENTS_LIST_META_QUERY = gql`
     }
   }
 `;
+
+
+export const INVOICES_LIST_QUERY = gql`
+  query invoicesList($sortField: String, $filter: InvoiceFilter, $perPage: Int, $page: Int) {
+    allInvoices(sortField: $sortField, filter: $filter, perPage: $perPage, page: $page) {
+      id
+      client_id
+      currency
+      due_on
+      kind
+      state
+      total_float
+    }
+  }
+`;
+
+
+export const ALL_INVOICES_LIST_META_QUERY = gql`
+  query allInvoicesListMeta($filter: InvoiceFilter, $perPage: Int, $page: Int) {
+    _allInvoicesMeta(filter: $filter, perPage: $perPage, page: $page) {
+      count
+    }
+  }
+`;
