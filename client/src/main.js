@@ -8,8 +8,8 @@ import './styles.scss';
 
 import App from './App.vue';
 import ClientsList from './components/clients/ClientsList.vue';
-// import ClientEdit from './components/clients/ClientEdit.vue';
-// import ClientNew from './components/clients/ClientNew.vue';
+import ClientEdit from './components/clients/ClientEdit.vue';
+import ClientNew from './components/clients/ClientNew.vue';
 
 const apolloClient = new ApolloClient({
   uri: 'http://localhost:4000/graphql'
@@ -28,8 +28,8 @@ const router = new VueRouter({
   mode: 'history',
   routes: [
     { path: '/', component: ClientsList },
-    // { path: '/edit/:id', component: ClientEdit },
-    // { path: '/new', component: ClientNew }
+    { path: '/new', component: ClientNew },
+    { path: '/edit/:id', component: ClientEdit },
   ]
 });
 
